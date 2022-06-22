@@ -1,6 +1,6 @@
-// TODO: Include packages needed for this application
 const inquirer = require('inquirer');
 const fs = require('fs');
+const generateMarkdown = require('./generateMarkdown');
 
 const getLicense = (value) => {
     if (value === "MIT") {
@@ -12,7 +12,6 @@ const getLicense = (value) => {
     }
 } 
 
-
 const questions = () => {
     return inquirer.prompt([
         {
@@ -21,23 +20,23 @@ const questions = () => {
             message: 'What is the title of your project?',
         },
         {
-            type: 'confirm',
-            name: 'Table of Contents?',
-            message: 'Do you need a table of contents?',
+            type: 'input',
+            name: 'description',
+            message: 'Description of your project'
         },
         {
             type: 'input',
-            name: 'Installation',
+            name: 'installation',
             message: 'What installations does the user need?',
         },
         {
             type: 'input',
-            name: 'How to use',
+            name: 'instructions',
             message: 'Instructions on how to use application',
         },
         {
             type: 'list',
-            name: 'license options',
+            name: 'license',
             message: 'Select a license for this project',
             choices: [ 
                 'MIT',
@@ -47,7 +46,7 @@ const questions = () => {
         },
         {
             type: 'input',
-            name: 'Contributors',
+            name: 'contributions',
             message: 'How can people contribute to your project?',
         },
         {
@@ -57,7 +56,7 @@ const questions = () => {
         },
         {
             type: 'input',
-            name: 'github username',
+            name: 'username',
             message: 'What is your github username?',
         },
         {
@@ -67,15 +66,16 @@ const questions = () => {
         }
     ])
 }
-// TODO: Create a function to write README file
-const writeToFile = (fileName, data) => {
-    fs.writeFile('./README.md', )
- }
 
-// TODO: Create a function to initialize app
-function init() { 
-    questions();
+const init = () => {
+    questions()
+    .then((answers) => {
+        fs.writeFileSync('README.md', generateMarkdown(answers));
+        console.log('README succesfully generated');
+     })
+     .catch((err) => {
+         console.log(err);
+    })
 }
 
-// Function call to initialize app
 init();
